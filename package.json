@@ -1,0 +1,41 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "standard": {
+    "global": [
+      "MobileUI",
+      "moment",
+      "openPage",
+      "showdown",
+      "CONFIG",
+      "alert",
+      "loading",
+      "closeLoading",
+      "angular",
+      "localStorage",
+      "closeAlert"
+    ],
+    "ignore": [
+      "/www/lib/"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeNews/admin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeNews/admin/issues"
+  },
+  "homepage": "https://github.com/CodeNews/admin#readme"
+}

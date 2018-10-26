@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="mobileui/fonts.css">
+  <link rel="stylesheet" type="text/css" href="mobileui/style.css">
+  <meta name="format-detection" content="telephone=no">
+  <meta charset="utf-8">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+  <title>CodeNews - Editor</title>
+</head>
+
+<body ng-controller="mainController">
+
+  <div class="content">
+
+    <div class="list list-editor">
+      <div class="item">
+        <label>Contribuidor</label>
+        <input type="password" placeholder="Digite sua chave de postagem" ng-model="tokenUser" ng-change="checkContribuitor()">
+      </div>
+      <div class="item">
+        <label>Título</label>
+        <input type="text" placeholder="Digite um título" ng-model="post.title">
+      </div>
+      <div class="item">
+        <label>Imagem</label>
+        <input type="text" placeholder="Cole a URL da imagem da postagem" ng-model="post.image">
+      </div>
+      <div class="item">
+        <label>Categoria</label>
+        <select ng-model="post.category">
+          <option value="Node.js">Node.js</option>
+        </select>
+      </div>
+      <div class="item">
+        <label>Autor da origem</label>
+        <input type="text" placeholder="Digite o nome de quem postou originalmente" ng-model="post.author">
+      </div>
+      <div class="item">
+        <label>URL do post completo</label>
+        <input type="text" placeholder="Cole a URL do post original" ng-model="post.url_complete">
+      </div>
+      <div class="item">
+        <label for="content">Conteúdo (Use Markdown), exemplo: <a class="blue small" href="http://demo.showdownjs.com/"
+            target="_blank"> showdownjs.com </a> </label>
+        <textarea rows="6" id="content-writing" ng-change="makeHtml()" ng-model="post.description" placeholder="Digite o conteúdo"></textarea>
+      </div>
+      <div class="item">
+        <button class="border-blue text-blue radius" ng-click="saveDraft()">Salvar rascunho</button>
+        <button class="blue radius" ng-click="savePublish()">Salvar e publicar</button>
+        <button class="red radius" ng-click="removePublishDraft()" ng-show="post._id">Excluir este post</button>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+  <div class="mock-mobile">
+    <div class="header text-white" ng-class="{'black-opacity-00': !showListPosts, 'black': showListPosts}">
+      <button class="left icon ion-android-arrow-back" ng-click="backPost()"></button>
+      <div class="right">
+        <button class="icon ion-android-share-alt"></button>
+        <button class="icon ion-android-more-vertical"></button>
+      </div>
+    </div>
+
+    <div class="content has-header" ng-show="showListPosts">
+      <div class="list">
+        <a class="item" ng-click="showPost(item)" ng-repeat="item in posts">
+          <div class="left cover avatar-list" style="background-image: url({{item.image}})"></div>
+          <h2 class="font-libre">{{item.title}}</h2>
+          <p class="text-italic opacity-70">
+            {{formatDate(item.datetime)}} - {{item.author}}
+          </p>
+          <span class="red padding text-small" ng-show="item.draft">Rascunho</span>
+          <span class="{{item.category_class}} padding text-small">{{item.category}}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="content" ng-show="!showListPosts">
+
+      <div class="cover cover-200 blue-grey-400 blend-multiply text-white" style="background-image: url({{post.image}})">
+        <div class="loading align-center" ng-show="!post.title">
+          <div class="space-huge"></div>
+          <svg class="loading-circle white-loading" width="40" height="40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="15"></circle>
+          </svg>
+          <p>Aguardando digitação...</p>
+        </div>
+        <div ng-show="post.title">
+          <div class="padding bottom gradient">
+            <span class="padding" ng-class="red" ng-show="post.draft">Rascunho</span>
+            <span class="padding" ng-class="getCategoryClass()">{{post.category}}</span>
+            <h1 class="margin-top font-libre text-big text-strong text-shadow">{{post.title}}</h1>
+            <p class="text-italic opacity-80">
+              {{formatDate()}} - {{post.author}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="list no-border grey-100" ng-show="contributor._id">
+        <div class="item" ng-click="showPosts()">
+          <img class="left avatar circle" ng-src="{{contributor.photo}}">
+          <span class="label opacity-50">Recomendado por</span>
+          <h2 class="text-strong">{{contributor.name}}</h2>
+          <p class="text-italic opacity-70 text-small">{{getDateStart(contributor.date_start)}}</p>
+          <div class="right">
+            <i class="icon ion-ios-arrow-thin-right"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="description-post" id="description-post"></div>
+
+      <div class="align-center padding" ng-show="post.url_complete">
+        <button class="blue-grey-400 radius">Ver post completo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="text/javascript" src="js/config.js"></script>
+  <script type="text/javascript" src="mobileui/mobileui.js"></script>
+  <script type="text/javascript" src="lib/angular.min.js"></script>
+  <script type="text/javascript" src="lib/moment-pt-br.js"></script>
+  <script type="text/javascript" src="lib/showdown.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+</body>
+
+</html>
