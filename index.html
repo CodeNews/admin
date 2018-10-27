@@ -30,10 +30,15 @@
         <input type="text" placeholder="Cole a URL da imagem da postagem" ng-model="post.image">
       </div>
       <div class="item">
-        <label>Categoria</label>
-        <select ng-model="post.category">
-          <option value="Node.js">Node.js</option>
-        </select>
+        <label>Tags</label><br>
+        <p ng-show="!tags.length">Carregando tags...</p>
+        <label class="tag-category margin-right" ng-repeat="item in tags" ng-class="item.color">
+          <input type="checkbox" class="black" ng-model="item.checked" ng-change="checkTags()"> 
+          {{item.name}}
+        </label>
+        <div class="right">
+          <button class="blue small" ng-click="addTag()">Add tag</button>
+        </div>
       </div>
       <div class="item">
         <label>Autor da origem</label>
@@ -78,7 +83,7 @@
             {{formatDate(item.datetime)}} - {{item.author}}
           </p>
           <span class="red padding text-small" ng-show="item.draft">Rascunho</span>
-          <span class="{{item.category_class}} padding text-small">{{item.category}}</span>
+          <span class="padding margin-right text-small" ng-class="tag.color" ng-repeat="tag in item.tags">{{tag.name}}</span>
         </a>
       </div>
     </div>
@@ -96,7 +101,7 @@
         <div ng-show="post.title">
           <div class="padding bottom gradient">
             <span class="padding" ng-class="red" ng-show="post.draft">Rascunho</span>
-            <span class="padding" ng-class="getCategoryClass()">{{post.category}}</span>
+            <span class="padding margin-right" ng-class="tag.color" ng-repeat="tag in post.tags">{{tag.name}}</span>
             <h1 class="margin-top font-libre text-big text-strong text-shadow">{{post.title}}</h1>
             <p class="text-italic opacity-80">
               {{formatDate()}} - {{post.author}}

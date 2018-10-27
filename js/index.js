@@ -5,6 +5,7 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
   $scope.tokenUser = ''
   $scope.post = {}
   $scope.contributor = {}
+  $scope.tags = []
 
   if (localStorage.getItem('contributor')) {
     $timeout(function () {
@@ -13,12 +14,24 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
     })
   }
 
+  function getTags () {
+    $scope.tags.length = 0
+    MobileUI.ajax.get(CONFIG.URL_API + '/posts/tags').end(function (err, res) {
+      if (err) return alert('Não foi possível listar tags!')
+      $timeout(function () {
+        $scope.tags = res.body.data
+      })
+    })
+  }
+
   $scope.makeHtml = function () {
     document.getElementById('description-post').innerHTML = converter.makeHtml($scope.post.description)
   }
 
-  $scope.getCategoryClass = function () {
-    if ($scope.post.category === 'Node.js') return 'green'
+  $scope.checkTags = function () {
+    $scope.post.tags = $scope.tags.filter(function (tag) {
+      return tag.checked
+    })
   }
 
   $scope.checkContribuitor = function () {
@@ -33,6 +46,7 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
           } else {
             $scope.contributor = res.body.data
             localStorage.setItem('contributor', $scope.tokenUser)
+            getTags()
           }
         })
       })
@@ -53,11 +67,52 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
     })
   }
 
+  $scope.addTag = function () {
+    alert({
+      title: 'nova tag',
+      message: 'Digite o nome da Tag: <div class="list"><div class="item"><input id="tag-name" placeholder="Tag" type="text"></div></div>',
+      buttons: [
+        {
+          label: 'Salvar',
+          onclick: function () {
+            var nameTag = document.getElementById('tag-name').value
+            if (!nameTag) {
+              return alert('Digite o nome da Tag!')
+            }
+            closeAlert()
+            loading('Criando tag...')
+            MobileUI.ajax.post(CONFIG.URL_API + '/posts/tags?token=' + $scope.tokenUser, { name: nameTag }).end(function (err, res) {
+              closeLoading()
+              if (err || res.body.errorMessage) return alert(res.body.errorMessage || err)
+              $timeout(function () {
+                getTags()
+              })
+            })
+          }
+        },
+        {
+          label: 'Cancelar',
+          class: 'text-white'
+        }
+      ]
+    })
+  }
+
   $scope.showPost = function (post) {
     $scope.post = angular.copy(post)
     $scope.posts.length = 0
     $scope.showListPosts = false
     $timeout(function () {
+      for (var tag of $scope.tags) {
+        tag.checked = false
+      }
+      for (var iChecked in $scope.post.tags) {
+        for (var i in $scope.tags) {
+          if ($scope.tags[i]._id === $scope.post.tags[iChecked]._id) {
+            $scope.tags[i].checked = true
+          }
+        }
+      }
       $scope.makeHtml()
     }, 200)
   }
@@ -84,7 +139,6 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
     if (!$scope.contributor._id) return alert('Informe seu token de contribuidor!')
 
     loading('Salvando rascunho...')
-    $scope.post.category_class = $scope.getCategoryClass()
     MobileUI.ajax.post(CONFIG.URL_API + '/posts/draft?token=' + $scope.tokenUser, $scope.post).end(function (err, res) {
       closeLoading()
       if (err || res.body.errorMessage) return alert(res.body.errorMessage || err)
@@ -101,7 +155,6 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
     if (!$scope.contributor._id) return alert('Informe seu token de contribuidor!')
 
     loading('Salvando e publicando...')
-    $scope.post.category_class = $scope.getCategoryClass()
     MobileUI.ajax.post(CONFIG.URL_API + '/posts?token=' + $scope.tokenUser, $scope.post).end(function (err, res) {
       closeLoading()
       if (err || res.body.errorMessage) return alert(res.body.errorMessage || err)

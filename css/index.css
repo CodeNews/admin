@@ -7,6 +7,12 @@ html, body {
 .text-italic {
   font-style: italic;
 }
+.tag-category input {
+  margin: 5px;
+}
+.margin-right {
+  margin-right:10px;
+}
 .avatar-list {
   width: 85px;
   height: 85px;
