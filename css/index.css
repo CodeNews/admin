@@ -25,10 +25,16 @@ html, body {
   font-size: 20px;
   margin-top: 10px;
 }
+.language {
+  width: 23px;
+}
 .description-post h2 {
   font-weight: bold;
   font-size: 16px;
   margin-top: 10px;
+}
+.padding-right-button {
+  padding-right: 80px !important;
 }
 #msg-primary,
 #msg-posts {

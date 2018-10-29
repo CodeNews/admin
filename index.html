@@ -22,6 +22,20 @@
         <input type="password" placeholder="Digite sua chave de postagem" ng-model="tokenUser" ng-change="checkContribuitor()">
       </div>
       <div class="item">
+        <label>URL do post completo</label>
+        <input type="text" placeholder="Cole a URL do post original" ng-model="post.url_complete">
+        <div class="right">
+          <button class="small blue" ng-click="loadUrl()">Load</button>
+        </div>
+      </div>
+      <div class="item">
+        <label>Idioma do post completo</label>
+        <select ng-model="post.language">
+          <option value="pt-br">Português</option>
+          <option value="en">Inglês</option>
+        </select>
+      </div>
+      <div class="item">
         <label>Título</label>
         <input type="text" placeholder="Digite um título" ng-model="post.title">
       </div>
@@ -29,7 +43,7 @@
         <label>Imagem</label>
         <input type="text" placeholder="Cole a URL da imagem da postagem" ng-model="post.image">
       </div>
-      <div class="item">
+      <div class="item padding-right-button">
         <label>Tags</label><br>
         <p ng-show="!tags.length">Carregando tags...</p>
         <label class="tag-category margin-right" ng-repeat="item in tags" ng-class="item.color">
@@ -43,10 +57,6 @@
       <div class="item">
         <label>Autor da origem</label>
         <input type="text" placeholder="Digite o nome de quem postou originalmente" ng-model="post.author">
-      </div>
-      <div class="item">
-        <label>URL do post completo</label>
-        <input type="text" placeholder="Cole a URL do post original" ng-model="post.url_complete">
       </div>
       <div class="item">
         <label for="content">Conteúdo (Use Markdown), exemplo: <a class="blue small" href="http://demo.showdownjs.com/"
@@ -104,6 +114,10 @@
             <span class="padding margin-right" ng-class="tag.color" ng-repeat="tag in post.tags">{{tag.name}}</span>
             <h1 class="margin-top font-libre text-big text-strong text-shadow">{{post.title}}</h1>
             <p class="text-italic opacity-80">
+              <div class="right">
+                <img ng-show="post.language === 'pt-br'" class="language" src="img/brazil.png">
+                <img ng-show="post.language === 'en'" class="language" src="img/united-states.png">
+              </div>
               {{formatDate()}} - {{post.author}}
             </p>
           </div>

@@ -3,7 +3,9 @@ var converter = new showdown.Converter()
 
 app.controller('mainController', function ($compile, $timeout, $scope) {
   $scope.tokenUser = ''
-  $scope.post = {}
+  $scope.post = {
+    language: 'pt-br'
+  }
   $scope.contributor = {}
   $scope.tags = []
 
@@ -26,6 +28,32 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
 
   $scope.makeHtml = function () {
     document.getElementById('description-post').innerHTML = converter.makeHtml($scope.post.description)
+  }
+
+  $scope.loadUrl = function () {
+    loading('Carregando dados da URL...')
+    MobileUI.ajax.post(CONFIG.URL_API + '/posts/load?token=' + $scope.tokenUser, { url: $scope.post.url_complete }).end(function (err, res) {
+      closeLoading()
+      if (err || res.body.errorMessage) return alert(res.body.errorMessage || err)
+      $timeout(function () {
+        var post = res.body.data
+        if (post.image && post.image.url) {
+          $scope.post.image = post.image.url
+        }
+        if (post.title) {
+          $scope.post.title = post.title
+        }
+        if (post.description) {
+          $scope.post.description = post.description
+        }
+        if (post.locale && post.locale.indexOf('en') !== -1) {
+          $scope.post.language = 'en'
+        }
+        if (post.locale && post.locale.indexOf('pt') !== -1) {
+          $scope.post.language = 'pt-br'
+        }
+      })
+    })
   }
 
   $scope.checkTags = function () {
