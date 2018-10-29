@@ -45,12 +45,16 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
         }
         if (post.description) {
           $scope.post.description = post.description
+          $scope.makeHtml()
         }
         if (post.locale && post.locale.indexOf('en') !== -1) {
           $scope.post.language = 'en'
         }
         if (post.locale && post.locale.indexOf('pt') !== -1) {
           $scope.post.language = 'pt-br'
+        }
+        if (post.author) {
+          $scope.post.author = post.author
         }
       })
     })
