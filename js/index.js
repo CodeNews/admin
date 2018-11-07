@@ -32,7 +32,10 @@ app.controller('mainController', function ($compile, $timeout, $scope) {
 
   $scope.loadUrl = function () {
     loading('Carregando dados da URL...')
-    MobileUI.ajax.post(CONFIG.URL_API + '/posts/load?token=' + $scope.tokenUser, { url: $scope.post.url_complete }).end(function (err, res) {
+    MobileUI.ajax.post(CONFIG.URL_API + '/posts/load?token=' + $scope.tokenUser, {
+      url: $scope.post.url_complete,
+      id: $scope.post._id
+    }).end(function (err, res) {
       closeLoading()
       if (err || res.body.errorMessage) return alert(res.body.errorMessage || err)
       $timeout(function () {
